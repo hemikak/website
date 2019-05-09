@@ -6,10 +6,9 @@ reviewers:
 title: Running Kubernetes Locally via Minikube
 content_template: templates/concept
 ---
+{% capture overview %}}
 
-{{% capture overview %}}
-
-Minikube is a tool that makes it easy to run Kubernetes locally. Minikube runs a single-node Kubernetes cluster inside a VM on your laptop for users looking to try out Kubernetes or develop with it day-to-day.
+Minikube is a tool that makes it easy to run Kubernetes locally. Minikube runs a single-node Kubernetes cluster inside a Virtual Machine (VM) on your laptop for users looking to try out Kubernetes or develop with it day-to-day.
 
 {{% /capture %}}
 
@@ -17,7 +16,7 @@ Minikube is a tool that makes it easy to run Kubernetes locally. Minikube runs a
 
 ## Minikube Features
 
-* Minikube supports Kubernetes features such as:
+Minikube supports the following Kubernetes features:
   * DNS
   * NodePorts
   * ConfigMaps and Secrets
@@ -32,219 +31,127 @@ See [Installing Minikube](/docs/tasks/tools/install-minikube/).
 
 ## Quickstart
 
-Here's a brief demo of Minikube usage.
-If you want to change the VM driver add the appropriate `--vm-driver=xxx` flag to `minikube start`. Minikube supports
-the following drivers:
+Here's a brief demo that guides you on how to start, use, and delete Minikube locally. Follow the steps given below to start and explore Minikube.
 
-* virtualbox
-* vmwarefusion
-* kvm2 ([driver installation](https://git.k8s.io/minikube/docs/drivers.md#kvm2-driver))
-* hyperkit ([driver installation](https://git.k8s.io/minikube/docs/drivers.md#hyperkit-driver))
-* hyperv ([driver installation](https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#hyperv-driver))
-Note that the IP below is dynamic and can change. It can be retrieved with `minikube ip`.
-* vmware ([driver installation](https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#vmware-unified-driver)) (VMware unified driver)
-* none (Runs the Kubernetes components on the host and not in a VM. Using this driver requires Docker ([docker install](https://docs.docker.com/install/linux/docker-ce/ubuntu/)) and a Linux environment)
+1. Start Minikube and create a cluster:
+    ```shell
+    minikube start
+    ```
+    The output is similar to this:
+    ```
+    Starting local Kubernetes cluster...
+    Running pre-create checks...
+    Creating machine...
+    Starting local Kubernetes cluster...
+    ```
+    For more information on starting your cluster on a specific Kubernetes version, VM, or container runtime, see [Starting a Cluster](docs/setup/minikube/#starting-a-cluster).
 
-```shell
-minikube start
-```
-```
-Starting local Kubernetes cluster...
-Running pre-create checks...
-Creating machine...
-Starting local Kubernetes cluster...
-```
-```shell
-kubectl run hello-minikube --image=k8s.gcr.io/echoserver:1.10 --port=8080
-```
-```
-deployment.apps/hello-minikube created
-```
+2. Now, you can interact with your cluster using kubectl. For more information, see [Interacting with Your Cluster](docs/setup/minikube/#interacting-with-your-cluster).
+    Let’s run the built-in `hello-minikube` pod. This creates a deployment for the pod:
+    ```shell
+    kubectl run hello-minikube --image=k8s.gcr.io/echoserver:1.10 --port=8080
+    ```
+    An existing image named `echoserver`, which is a simple HTTP server, is used in the above command and it is exposed on port 8080 using `--port`.
+    The output is similar to this:
+    ```
+    deployment.apps/hello-minikube created
+    ```
+3. To access the `hello-minikue` service, expose the deployment as a NodePort:
+    ```shell
+    kubectl expose deployment hello-minikube --type=NodePort
+    ```
+    The output is similar to this:
+    ```
+    service/hello-minikube exposed
+    ```
+    
+4. The `hello-minikube` pod is now launched but you have to wait until the pod is up before accessing it via the exposed service.
+    Check if the pod is up and running:
+    ```shell
+    kubectl get pod
+    ```
+   If the output shows the `STATUS` as `ContainerCreating`, the pod is still being created.
+   Example:
+    ```
+    NAME                              READY     STATUS              RESTARTS   AGE
+    hello-minikube-3383150820-vctvh   0/1       ContainerCreating   0          3s
+    ```
+    If the output shows the `STATUS` as `Running`, the pod is now up and running.
+    Example:
 
-```shell
-kubectl expose deployment hello-minikube --type=NodePort
-```
-```
-service/hello-minikube exposed
-```
+    ```
+    NAME                              READY     STATUS    RESTARTS   AGE
+    hello-minikube-3383150820-vctvh   1/1       Running   0          13s
+    ```
+5. Get the URL of the exposed service to view the service details:
+    ```
+    minikube service hello-minikube --url
+    ```
+6. To view the details of your local cluster, copy and paste the URL you got as the output on your browser.
+    The output is similar to this:
+    ```
+    Hostname: hello-minikube-7c77b68cff-8wdzq
 
-We have now launched an echoserver pod but we have to wait until the pod is up before curling/accessing it
-via the exposed service.
-To check whether the pod is up and running we can use the following:
+    Pod Information:
+        -no pod information available-
 
-```
-kubectl get pod
-```
-```
-NAME                              READY     STATUS              RESTARTS   AGE
-hello-minikube-3383150820-vctvh   0/1       ContainerCreating   0          3s
-```
+    Server values:
+        server_version=nginx: 1.13.3 - lua: 10008
 
-We can see that the pod is still being created from the ContainerCreating status
-kubectl get pod
+    Request Information:
+        client_address=172.17.0.1
+        method=GET
+        real path=/
+        query=
+        request_version=1.1
+        request_scheme=http
+        request_uri=http://192.168.99.100:8080/
 
-```
-NAME                              READY     STATUS    RESTARTS   AGE
-hello-minikube-3383150820-vctvh   1/1       Running   0          13s
-```
+    Request Headers:
+        accept=*/*
+        host=192.168.99.100:30674
+        user-agent=curl/7.47.0
 
-We can see that the pod is now Running and we will now be able to curl it:
-
-```
-curl $(minikube service hello-minikube --url)
-```
-```
-
-Hostname: hello-minikube-7c77b68cff-8wdzq
-
-Pod Information:
-	-no pod information available-
-
-Server values:
-	server_version=nginx: 1.13.3 - lua: 10008
-
-Request Information:
-	client_address=172.17.0.1
-	method=GET
-	real path=/
-	query=
-	request_version=1.1
-	request_scheme=http
-	request_uri=http://192.168.99.100:8080/
-
-Request Headers:
-	accept=*/*
-	host=192.168.99.100:30674
-	user-agent=curl/7.47.0
-
-Request Body:
-	-no body in request-
-```
-
-```shell
-kubectl delete services hello-minikube
-```
-```
-service "hello-minikube" deleted
-```
-
-```shell
-kubectl delete deployment hello-minikube
-```
-```
-deployment.extensions "hello-minikube" deleted
-```
-
-```shell
-minikube stop
-```
-```
-Stopping local Kubernetes cluster...
-Stopping "minikube"...
-```
-
-### Alternative Container Runtimes
-
-#### containerd
-
-To use [containerd](https://github.com/containerd/containerd) as the container runtime, run:
-
-```bash
-minikube start \
-    --network-plugin=cni \
-    --enable-default-cni \
-    --container-runtime=containerd \
-    --bootstrapper=kubeadm
-```
-
-Or you can use the extended version:
-
-```bash
-minikube start \
-    --network-plugin=cni \
-    --enable-default-cni \
-    --extra-config=kubelet.container-runtime=remote \
-    --extra-config=kubelet.container-runtime-endpoint=unix:///run/containerd/containerd.sock \
-    --extra-config=kubelet.image-service-endpoint=unix:///run/containerd/containerd.sock \
-    --bootstrapper=kubeadm
-```
-
-#### CRI-O
-
-To use [CRI-O](https://github.com/kubernetes-incubator/cri-o) as the container runtime, run:
-
-```bash
-minikube start \
-    --network-plugin=cni \
-    --enable-default-cni \
-    --container-runtime=cri-o \
-    --bootstrapper=kubeadm
-```
-
-Or you can use the extended version:
-
-```bash
-minikube start \
-    --network-plugin=cni \
-    --enable-default-cni \
-    --extra-config=kubelet.container-runtime=remote \
-    --extra-config=kubelet.container-runtime-endpoint=/var/run/crio.sock \
-    --extra-config=kubelet.image-service-endpoint=/var/run/crio.sock \
-    --bootstrapper=kubeadm
-```
-
-#### rkt container engine
-
-To use [rkt](https://github.com/rkt/rkt) as the container runtime run:
-
-```shell
-minikube start \
-    --network-plugin=cni \
-    --enable-default-cni \
-    --container-runtime=rkt
-```
-
-This will use an alternative minikube ISO image containing both rkt, and Docker, and enable CNI networking.
-
-### Driver plugins
-
-See [DRIVERS](https://git.k8s.io/minikube/docs/drivers.md) for details on supported drivers and how to install
-plugins, if required.
-
-### Use local images by re-using the Docker daemon
-
-When using a single VM of Kubernetes, it's really handy to reuse the Minikube's built-in Docker daemon; as this means you don't have to build a docker registry on your host machine and push the image into it - you can just build inside the same docker daemon as minikube which speeds up local experiments. Just make sure you tag your Docker image with something other than 'latest' and use that tag while you pull the image. Otherwise, if you do not specify version of your image, it will be assumed as `:latest`, with pull image policy of `Always` correspondingly, which may eventually result in `ErrImagePull` as you may not have any versions of your Docker image out there in the default docker registry (usually DockerHub) yet.
-
-To be able to work with the docker daemon on your mac/linux host use the `docker-env command` in your shell:
-
-```shell
-eval $(minikube docker-env)
-```
-
-You should now be able to use docker on the command line on your host mac/linux machine talking to the docker daemon inside the minikube VM:
-
-```shell
-docker ps
-```
-
-On Centos 7, docker may report the following error:
-
-```shell
-Could not read CA certificate "/etc/docker/ca.pem": open /etc/docker/ca.pem: no such file or directory
-```
-
-The fix is to update /etc/sysconfig/docker to ensure that Minikube's environment changes are respected:
-
-```shell
-< DOCKER_CERT_PATH=/etc/docker
----
-> if [ -z "${DOCKER_CERT_PATH}" ]; then
->   DOCKER_CERT_PATH=/etc/docker
-> fi
-```
-
-Remember to turn off the imagePullPolicy:Always, otherwise Kubernetes won't use images you built locally.
-
+    Request Body:
+        -no body in request-
+    ```
+	If you have completed your tasks and no longer want the service and cluster to run, you can delete them.
+7. Delete your `hello-minikube` service:
+    ```shell
+    kubectl delete services hello-minikube
+    ```
+    The output is simillar to this:
+    ```
+    service "hello-minikube" deleted
+    ```
+8. Delete your `hello-minikube` deployment:
+    ```shell
+    kubectl delete deployment hello-minikube
+    ```
+    The output is simillar to this:
+    ```
+    deployment.extensions "hello-minikube" deleted
+    ```
+9. Stop your local Minikube cluster:
+    ```shell
+    minikube stop
+    ```
+    The output is simillar to this:
+    ```
+    Stopping "minikube"...
+    "minikube" stopped.
+    ```
+	For more information, see [Stopping a Cluster](docs/setup/minikube/#stopping-a-cluster).
+10. Delete your local Minikube cluster:
+    ```shell
+    minikube delete
+    ```
+    The output is simillar to this:
+    ```
+    Deleting "minikube" ...
+    The "minikube" cluster has been deleted.
+    ```
+	For more information, see [Deleting a cluster](/docs/setup/minikube/#deleting-a-cluster).
 ## Managing your Cluster
 
 ### Starting a Cluster
@@ -268,11 +175,123 @@ To switch back to this context later, run this command: `kubectl config use-cont
 
 You can specify the specific version of Kubernetes for Minikube to use by
 adding the `--kubernetes-version` string to the `minikube start` command. For
-example, to run version `v1.7.3`, you would run the following:
+example, to run version {{< param "fullversion" >}}, you would run the following:
 
 ```
-minikube start --kubernetes-version v1.7.3
+minikube start --kubernetes-version {{< param "fullversion" >}}
 ```
+#### Specifying the VM driver
+You can change the VM driver by adding the `--vm-driver=<enter_driver_name>` flag to `minikube start`.
+For example the command would be.
+```shell
+minikube start --vm-driver=<driver_name>
+```
+ Minikube supports the following drivers:
+ {{< note >}}
+ See [DRIVERS](https://git.k8s.io/minikube/docs/drivers.md) for details on supported drivers and how to install
+plugins.
+{{< /note >}}
+* virtualbox
+* vmwarefusion
+* kvm2 ([driver installation](https://git.k8s.io/minikube/docs/drivers.md#kvm2-driver))
+* hyperkit ([driver installation](https://git.k8s.io/minikube/docs/drivers.md#hyperkit-driver))
+* hyperv ([driver installation](https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#hyperv-driver))
+Note that the IP below is dynamic and can change. It can be retrieved with `minikube ip`.
+* vmware ([driver installation](https://github.com/kubernetes/minikube/blob/master/docs/drivers.md#vmware-unified-driver)) (VMware unified driver)
+* none (Runs the Kubernetes components on the host and not in a VM. Using this driver requires Docker ([docker install](https://docs.docker.com/install/linux/docker-ce/ubuntu/)) and a Linux environment)
+
+#### Starting a cluster on alternative container runtimes
+You can start Minikube on the following container runtimes.
+{{< tabs name="container_runtimes" >}}
+{{% tab name="containerd" %}}
+To use [containerd](https://github.com/containerd/containerd) as the container runtime, run:
+```bash
+minikube start \
+    --network-plugin=cni \
+    --enable-default-cni \
+    --container-runtime=containerd \
+    --bootstrapper=kubeadm
+```
+
+Or you can use the extended version:
+
+```bash
+minikube start \
+    --network-plugin=cni \
+    --enable-default-cni \
+    --extra-config=kubelet.container-runtime=remote \
+    --extra-config=kubelet.container-runtime-endpoint=unix:///run/containerd/containerd.sock \
+    --extra-config=kubelet.image-service-endpoint=unix:///run/containerd/containerd.sock \
+    --bootstrapper=kubeadm
+```
+{{% /tab %}}
+{{% tab name="CRI-O" %}}
+To use [CRI-O](https://github.com/kubernetes-incubator/cri-o) as the container runtime, run:
+```bash
+minikube start \
+    --network-plugin=cni \
+    --enable-default-cni \
+    --container-runtime=cri-o \
+    --bootstrapper=kubeadm
+```
+Or you can use the extended version:
+
+```bash
+minikube start \
+    --network-plugin=cni \
+    --enable-default-cni \
+    --extra-config=kubelet.container-runtime=remote \
+    --extra-config=kubelet.container-runtime-endpoint=/var/run/crio.sock \
+    --extra-config=kubelet.image-service-endpoint=/var/run/crio.sock \
+    --bootstrapper=kubeadm
+```
+{{% /tab %}}
+{{% tab name="rkt container engine" %}}
+To use [rkt](https://github.com/rkt/rkt) as the container runtime run:
+```shell
+minikube start \
+    --network-plugin=cni \
+    --enable-default-cni \
+    --container-runtime=rkt
+```
+This will use an alternative minikube ISO image containing both rkt, and Docker, and enable CNI networking.
+{{% /tab %}}
+{{< /tabs >}}
+
+#### Use local images by re-using the Docker daemon
+
+When using a single VM of Kubernetes, it's really handy to reuse the Minikube's built-in Docker daemon; as this means you don't have to build a docker registry on your host machine and push the image into it - you can just build inside the same docker daemon as minikube which speeds up local experiments. Just make sure you tag your Docker image with something other than 'latest' and use that tag while you pull the image. Otherwise, if you do not specify version of your image, it will be assumed as `:latest`, with pull image policy of `Always` correspondingly, which may eventually result in `ErrImagePull` as you may not have any versions of your Docker image out there in the default docker registry (usually DockerHub) yet.
+
+To be able to work with the docker daemon on your mac/linux host use the `docker-env command` in your shell:
+
+```shell
+eval $(minikube docker-env)
+```
+
+You should now be able to use docker on the command line on your host mac/linux machine talking to the docker daemon inside the minikube VM:
+
+```shell
+docker ps
+```
+{{< note >}}
+On Centos 7, docker may report the following error:
+
+```shell
+Could not read CA certificate "/etc/docker/ca.pem": open /etc/docker/ca.pem: no such file or directory
+```
+
+The fix is to update /etc/sysconfig/docker to ensure that Minikube's environment changes are respected:
+
+```shell
+< DOCKER_CERT_PATH=/etc/docker
+---
+> if [ -z "${DOCKER_CERT_PATH}" ]; then
+>   DOCKER_CERT_PATH=/etc/docker
+> fi
+```
+
+Remember to turn off the imagePullPolicy:Always, otherwise Kubernetes won't use images you built locally.
+{{< /note >}}
 
 ### Configuring Kubernetes
 
