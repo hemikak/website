@@ -31,7 +31,7 @@ See [Installing Minikube](/docs/tasks/tools/install-minikube/).
 
 ## Quickstart
 
-Here's a brief demo that guides you on how to start, use, and delete Minikube locally. Follow the steps given below to start and explore Minikube.
+This brief demo guides you on how to start, use, and delete Minikube locally. Follow the steps given below to start and explore Minikube.
 
 1. Start Minikube and create a cluster:
     ```shell
@@ -115,38 +115,38 @@ Here's a brief demo that guides you on how to start, use, and delete Minikube lo
     Request Body:
         -no body in request-
     ```
-	If you have completed your tasks and no longer want the service and cluster to run, you can delete them.
-7. Delete your `hello-minikube` service:
+	If you no longer want the service and cluster to run, you can delete them.
+7. Delete the `hello-minikube` service:
     ```shell
     kubectl delete services hello-minikube
     ```
-    The output is simillar to this:
+    The output is similar to this:
     ```
     service "hello-minikube" deleted
     ```
-8. Delete your `hello-minikube` deployment:
+8. Delete the `hello-minikube` deployment:
     ```shell
     kubectl delete deployment hello-minikube
     ```
-    The output is simillar to this:
+    The output is similar to this:
     ```
     deployment.extensions "hello-minikube" deleted
     ```
-9. Stop your local Minikube cluster:
+9. Stop the local Minikube cluster:
     ```shell
     minikube stop
     ```
-    The output is simillar to this:
+    The output is similar to this:
     ```
     Stopping "minikube"...
     "minikube" stopped.
     ```
 	For more information, see [Stopping a Cluster](docs/setup/minikube/#stopping-a-cluster).
-10. Delete your local Minikube cluster:
+10. Delete the local Minikube cluster:
     ```shell
     minikube delete
     ```
-    The output is simillar to this:
+    The output is similar to this:
     ```
     Deleting "minikube" ...
     The "minikube" cluster has been deleted.
