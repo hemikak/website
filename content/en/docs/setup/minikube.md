@@ -47,48 +47,47 @@ This brief demo guides you on how to start, use, and delete Minikube locally. Fo
     For more information on starting your cluster on a specific Kubernetes version, VM, or container runtime, see [Starting a Cluster](docs/setup/minikube/#starting-a-cluster).
 
 2. Now, you can interact with your cluster using kubectl. For more information, see [Interacting with Your Cluster](docs/setup/minikube/#interacting-with-your-cluster).
-    Let’s create a Kubernetes deployment using the `echoserve` image.
+    Let’s create a Kubernetes Deployment using an existing image named `echoserver`, which is a simple HTTP server and expose it on port 8080 using `--port`.
     ```shell
     kubectl run hello-minikube --image=k8s.gcr.io/echoserver:1.10 --port=8080
     ```
-    An existing image named `echoserver`, which is a simple HTTP server is used in the above command and it is exposed on port 8080 using `--port`.
     The output is similar to this:
     ```
     deployment.apps/hello-minikube created
     ```
-3. To access the `hello-minikue` deployment, expose it as a service:
+3. To access the `hello-minikue` Deployment, expose it as a Service:
     ```shell
     kubectl expose deployment hello-minikube --type=NodePort
     ```
-    The option `--type=NodePort` specifies a type of the service.
+    The option `--type=NodePort` specifies a type of the Service.
     The output is similar to this:
     ```
     service/hello-minikube exposed
     ```
     
-4. The `hello-minikube` pod is now launched but you have to wait until the pod is up before accessing it via the exposed service.
-    Check if the pod is up and running:
+4. The `hello-minikube` Pod is now launched but you have to wait until the Pod is up before accessing it via the exposed Service.
+    Check if the Pod is up and running:
     ```shell
     kubectl get pod
     ```
-   If the output shows the `STATUS` as `ContainerCreating`, the pod is still being created.
+   If the output shows the `STATUS` as `ContainerCreating`, the Pod is still being created.
    Example:
     ```
     NAME                              READY     STATUS              RESTARTS   AGE
     hello-minikube-3383150820-vctvh   0/1       ContainerCreating   0          3s
     ```
-    If the output shows the `STATUS` as `Running`, the pod is now up and running.
+    If the output shows the `STATUS` as `Running`, the Pod is now up and running.
     Example:
 
     ```
     NAME                              READY     STATUS    RESTARTS   AGE
     hello-minikube-3383150820-vctvh   1/1       Running   0          13s
     ```
-5. Get the URL of the exposed service to view the service details:
+5. Get the URL of the exposed Service to view the Service details:
     ```
     minikube service hello-minikube --url
     ```
-6. To view the details of your local cluster, copy and paste the URL you got as the output on your browser.
+6. To view the details of your local cluster, copy and paste the URL you got as the output, on your browser.
     The output is similar to this:
     ```
     Hostname: hello-minikube-7c77b68cff-8wdzq
@@ -116,8 +115,8 @@ This brief demo guides you on how to start, use, and delete Minikube locally. Fo
     Request Body:
         -no body in request-
     ```
-	If you no longer want the service and cluster to run, you can delete them.
-7. Delete the `hello-minikube` service:
+	If you no longer want the Service and cluster to run, you can delete them.
+7. Delete the `hello-minikube` Service:
     ```shell
     kubectl delete services hello-minikube
     ```
@@ -125,7 +124,7 @@ This brief demo guides you on how to start, use, and delete Minikube locally. Fo
     ```
     service "hello-minikube" deleted
     ```
-8. Delete the `hello-minikube` deployment:
+8. Delete the `hello-minikube` Deployment:
     ```shell
     kubectl delete deployment hello-minikube
     ```
@@ -261,27 +260,27 @@ This will use an alternative minikube ISO image containing both rkt, and Docker,
 
 #### Use local images by re-using the Docker daemon
 
-When using a single VM of Kubernetes, it's really handy to reuse the Minikube's built-in Docker daemon; as this means you don't have to build a docker registry on your host machine and push the image into it - you can just build inside the same docker daemon as minikube which speeds up local experiments. Just make sure you tag your Docker image with something other than 'latest' and use that tag while you pull the image. Otherwise, if you do not specify version of your image, it will be assumed as `:latest`, with pull image policy of `Always` correspondingly, which may eventually result in `ErrImagePull` as you may not have any versions of your Docker image out there in the default docker registry (usually DockerHub) yet.
+When using a single VM for Kubernetes, it's useful to reuse Minikube's built-in Docker daemon. This means you don't have to build a Docker registry on your host machine and push the image into it. Instead, you can build a Docker daemon inside Minikube which speeds up local experiments. Just make sure you tag your Docker image with something other than 'latest' and use that tag while you pull the image. If you do not specify the version of your image, it is assumed as `:latest` and if the image pull policy is set to  `Always`, this eventually results in an `ErrImagePull` as you may not have the Docker image in the default Docker registry (usually DockerHub). Therefore, remember to turn off the `imagePullPolicy:Always` because it would not allow Kubernetes to use the images you built locally.
 
-To be able to work with the docker daemon on your mac/linux host use the `docker-env command` in your shell:
+To be able to work with the Docker daemon on your Mac/Linux host, use the `docker-env command` in your shell:
 
 ```shell
 eval $(minikube docker-env)
 ```
 
-You should now be able to use docker on the command line on your host mac/linux machine talking to the docker daemon inside the minikube VM:
+You are now able to use Docker on the command line of your host Mac/Linux machine to talk to the Docker daemon inside the Minikube VM:
 
 ```shell
 docker ps
 ```
 {{< note >}}
-On Centos 7, docker may report the following error:
+On Centos 7, Docker may report the following error:
 
 ```shell
 Could not read CA certificate "/etc/docker/ca.pem": open /etc/docker/ca.pem: no such file or directory
 ```
 
-The fix is to update /etc/sysconfig/docker to ensure that Minikube's environment changes are respected:
+This can be fixed by updating /etc/sysconfig/docker to ensure that Minikube's environment changes are respected:
 
 ```shell
 < DOCKER_CERT_PATH=/etc/docker
@@ -290,8 +289,6 @@ The fix is to update /etc/sysconfig/docker to ensure that Minikube's environment
 >   DOCKER_CERT_PATH=/etc/docker
 > fi
 ```
-
-Remember to turn off the imagePullPolicy:Always, otherwise Kubernetes won't use images you built locally.
 {{< /note >}}
 
 ### Configuring Kubernetes
@@ -354,7 +351,7 @@ minikube dashboard
 
 ### Services
 
-To access a service exposed via a node port, run this command in a shell after starting Minikube to get the address:
+To access a Service exposed via a node port, run this command in a shell after starting Minikube to get the address:
 
 ```shell
 minikube service [-n NAMESPACE] [--url] NAME
