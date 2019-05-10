@@ -49,6 +49,7 @@ This brief demo guides you on how to start, use, and delete Minikube locally. Fo
     For more information on starting your cluster on a specific Kubernetes version, VM, or container runtime, see [Starting a Cluster](docs/setup/minikube/#starting-a-cluster).
 
 2. Now, you can interact with your cluster using kubectl. For more information, see [Interacting with Your Cluster](docs/setup/minikube/#interacting-with-your-cluster).
+    
     Let’s create a Kubernetes Deployment using an existing image named `echoserver`, which is a simple HTTP server and expose it on port 8080 using `--port`.
     ```shell
     kubectl run hello-minikube --image=k8s.gcr.io/echoserver:1.10 --port=8080
@@ -68,17 +69,20 @@ This brief demo guides you on how to start, use, and delete Minikube locally. Fo
     ```
     
 4. The `hello-minikube` Pod is now launched but you have to wait until the Pod is up before accessing it via the exposed Service.
+    
     Check if the Pod is up and running:
     ```shell
     kubectl get pod
     ```
    If the output shows the `STATUS` as `ContainerCreating`, the Pod is still being created.
+   
    Example:
     ```
     NAME                              READY     STATUS              RESTARTS   AGE
     hello-minikube-3383150820-vctvh   0/1       ContainerCreating   0          3s
     ```
     If the output shows the `STATUS` as `Running`, the Pod is now up and running.
+    
     Example:
 
     ```
@@ -90,6 +94,7 @@ This brief demo guides you on how to start, use, and delete Minikube locally. Fo
     minikube service hello-minikube --url
     ```
 6. To view the details of your local cluster, copy and paste the URL you got as the output, on your browser.
+    
     The output is similar to this:
     ```
     Hostname: hello-minikube-7c77b68cff-8wdzq
@@ -154,6 +159,7 @@ This brief demo guides you on how to start, use, and delete Minikube locally. Fo
     The "minikube" cluster has been deleted.
     ```
 	For more information, see [Deleting a cluster](/docs/setup/minikube/#deleting-a-cluster).
+  
 ## Managing your Cluster
 
 ### Starting a Cluster
