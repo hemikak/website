@@ -194,6 +194,7 @@ minikube start --vm-driver=<driver_name>
  See [DRIVERS](https://git.k8s.io/minikube/docs/drivers.md) for details on supported drivers and how to install
 plugins.
 {{< /note >}}
+
 * virtualbox
 * vmwarefusion
 * kvm2 ([driver installation](https://git.k8s.io/minikube/docs/drivers.md#kvm2-driver))
