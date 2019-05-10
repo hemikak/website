@@ -71,20 +71,16 @@ This brief demo guides you on how to start, use, and delete Minikube locally. Fo
     
 4. The `hello-minikube` Pod is now launched but you have to wait until the Pod is up before accessing it via the exposed Service.
     
-    Check if the Pod is up and running:
+   Check if the Pod is up and running:
     ```shell
     kubectl get pod
     ```
-   If the output shows the `STATUS` as `ContainerCreating`, the Pod is still being created.
-   
-   Example:
+   If the output shows the `STATUS` as `ContainerCreating`, the Pod is still being created:
     ```
     NAME                              READY     STATUS              RESTARTS   AGE
     hello-minikube-3383150820-vctvh   0/1       ContainerCreating   0          3s
     ```
-    If the output shows the `STATUS` as `Running`, the Pod is now up and running.
-    
-    Example:
+   If the output shows the `STATUS` as `Running`, the Pod is now up and running:
     ```
     NAME                              READY     STATUS    RESTARTS   AGE
     hello-minikube-3383150820-vctvh   1/1       Running   0          13s
