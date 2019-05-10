@@ -18,6 +18,7 @@ Minikube is a tool that makes it easy to run Kubernetes locally. Minikube runs a
 ## Minikube Features
 
 Minikube supports the following Kubernetes features:
+
 * DNS
 * NodePorts
 * ConfigMaps and Secrets
