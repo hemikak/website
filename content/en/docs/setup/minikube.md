@@ -6,7 +6,8 @@ reviewers:
 title: Running Kubernetes Locally via Minikube
 content_template: templates/concept
 ---
-{% capture overview %}}
+
+{{% capture overview %}}
 
 Minikube is a tool that makes it easy to run Kubernetes locally. Minikube runs a single-node Kubernetes cluster inside a Virtual Machine (VM) on your laptop for users looking to try out Kubernetes or develop with it day-to-day.
 
