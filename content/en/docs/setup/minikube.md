@@ -18,13 +18,13 @@ Minikube is a tool that makes it easy to run Kubernetes locally. Minikube runs a
 ## Minikube Features
 
 Minikube supports the following Kubernetes features:
-  * DNS
-  * NodePorts
-  * ConfigMaps and Secrets
-  * Dashboards
-  * Container Runtime: Docker, [rkt](https://github.com/rkt/rkt), [CRI-O](https://github.com/kubernetes-incubator/cri-o) and [containerd](https://github.com/containerd/containerd)
-  * Enabling CNI (Container Network Interface)
-  * Ingress
+* DNS
+* NodePorts
+* ConfigMaps and Secrets
+* Dashboards
+* Container Runtime: Docker, [rkt](https://github.com/rkt/rkt), [CRI-O](https://github.com/kubernetes-incubator/cri-o) and [containerd](https://github.com/containerd/containerd)
+* Enabling CNI (Container Network Interface)
+* Ingress
 
 ## Installation
 
