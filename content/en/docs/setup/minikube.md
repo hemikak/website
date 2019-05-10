@@ -47,19 +47,20 @@ This brief demo guides you on how to start, use, and delete Minikube locally. Fo
     For more information on starting your cluster on a specific Kubernetes version, VM, or container runtime, see [Starting a Cluster](docs/setup/minikube/#starting-a-cluster).
 
 2. Now, you can interact with your cluster using kubectl. For more information, see [Interacting with Your Cluster](docs/setup/minikube/#interacting-with-your-cluster).
-    Let’s run the built-in `hello-minikube` pod. This creates a deployment for the pod:
+    Let’s create a Kubernetes deployment using the `echoserve` image.
     ```shell
     kubectl run hello-minikube --image=k8s.gcr.io/echoserver:1.10 --port=8080
     ```
-    An existing image named `echoserver`, which is a simple HTTP server, is used in the above command and it is exposed on port 8080 using `--port`.
+    An existing image named `echoserver`, which is a simple HTTP server is used in the above command and it is exposed on port 8080 using `--port`.
     The output is similar to this:
     ```
     deployment.apps/hello-minikube created
     ```
-3. To access the `hello-minikue` service, expose the deployment as a NodePort:
+3. To access the `hello-minikue` deployment, expose it as a service:
     ```shell
     kubectl expose deployment hello-minikube --type=NodePort
     ```
+    The option `--type=NodePort` specifies a type of the service.
     The output is similar to this:
     ```
     service/hello-minikube exposed
