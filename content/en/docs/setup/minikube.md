@@ -62,7 +62,8 @@ This brief demo guides you on how to start, use, and delete Minikube locally. Fo
     ```shell
     kubectl expose deployment hello-minikube --type=NodePort
     ```
-    The option `--type=NodePort` specifies a type of the Service.
+    The option `--type=NodePort` specifies the type of the Service.
+    
     The output is similar to this:
     ```
     service/hello-minikube exposed
@@ -84,7 +85,6 @@ This brief demo guides you on how to start, use, and delete Minikube locally. Fo
     If the output shows the `STATUS` as `Running`, the Pod is now up and running.
     
     Example:
-
     ```
     NAME                              READY     STATUS    RESTARTS   AGE
     hello-minikube-3383150820-vctvh   1/1       Running   0          13s
